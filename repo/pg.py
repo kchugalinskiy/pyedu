@@ -11,5 +11,5 @@ class Repository(object):
     def get_number_of_tables(self):
         with self.conn.cursor(cursor_factory=DictCursor) as cursor:
             cursor.execute('SELECT count(*) FROM information_schema.tables')
-            records = cursor.fetchall()
-            return str(records[0]['count'])
+            records = cursor.fetchone()
+            return str(records['count'])

@@ -12,7 +12,9 @@ def run():
     # used in circumstances in which the with statement does not fit the needs
     # of the code.
     print("Will try to greet world ...")
-    with grpc.insecure_channel(os.environ.get('GRPC_HOST') + ':' + os.environ.get('GRPC_PORT')) as channel:
+    host = os.environ.get('GRPC_HOST')
+    port = os.environ.get('GRPC_PORT')
+    with grpc.insecure_channel(host + ':' + port) as channel:
         stub = hello_pb2_grpc.GreeterStub(channel)
         response = stub.SayHello(hello_pb2.HelloRequest(name='you'))
     print("Greeter client received: " + response.message)

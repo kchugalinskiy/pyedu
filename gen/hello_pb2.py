@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0fgen/hello.proto\x12\nhelloworld\"*\n\x0cHelloRequest\x12\x11\n\x04name\x18\x01 \x01(\tH\x00\x88\x01\x01\x42\x07\n\x05_name\"\x1d\n\nHelloReply\x12\x0f\n\x07message\x18\x01 \x01(\t2I\n\x07Greeter\x12>\n\x08SayHello\x12\x18.helloworld.HelloRequest\x1a\x16.helloworld.HelloReply\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0fgen/hello.proto\x12\nhelloworld\"*\n\x0cHelloRequest\x12\x11\n\x04name\x18\x01 \x01(\tH\x00\x88\x01\x01\x42\x07\n\x05_name\"\x1d\n\nHelloReply\x12\x0f\n\x07message\x18\x01 \x01(\t\",\n\x0eGoodbyeRequest\x12\x11\n\x04name\x18\x01 \x01(\tH\x00\x88\x01\x01\x42\x07\n\x05_name\"\x1f\n\x0cGoodbyeReply\x12\x0f\n\x07message\x18\x01 \x01(\t2\x8f\x01\n\x07Greeter\x12>\n\x08SayHello\x12\x18.helloworld.HelloRequest\x1a\x16.helloworld.HelloReply\"\x00\x12\x44\n\nSayGoodbye\x12\x1a.helloworld.GoodbyeRequest\x1a\x18.helloworld.GoodbyeReply\"\x00\x62\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'gen.hello_pb2', globals())
@@ -24,6 +24,10 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _HELLOREQUEST._serialized_end=73
   _HELLOREPLY._serialized_start=75
   _HELLOREPLY._serialized_end=104
-  _GREETER._serialized_start=106
-  _GREETER._serialized_end=179
+  _GOODBYEREQUEST._serialized_start=106
+  _GOODBYEREQUEST._serialized_end=150
+  _GOODBYEREPLY._serialized_start=152
+  _GOODBYEREPLY._serialized_end=183
+  _GREETER._serialized_start=186
+  _GREETER._serialized_end=329
 # @@protoc_insertion_point(module_scope)
