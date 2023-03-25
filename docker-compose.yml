@@ -1,0 +1,40 @@
+version: "3"
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password123123123
+      - POSTGRES_DB=students
+    ports:
+      - "5432:5432"
+    restart: always
+    volumes:
+      - edu-pg-data:/var/lib/postgresql/data
+  server:
+    image: pyserver:latest
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password123123123
+      - POSTGRES_DB=students
+    depends_on:
+      postgres:
+        condition: service_started
+    ports:
+      - "8080:8080"
+
+  client:
+    environment:
+      GRPC_HOST: server
+      GRPC_PORT: 8080
+    image: pyclient:latest
+    depends_on:
+      server:
+        condition: service_started
+
+volumes:
+  edu-pg-data: {}

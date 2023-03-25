@@ -1,0 +1,39 @@
+version: '3'
+
+tasks:
+  protoc:
+    cmds:
+      - python -m grpc_tools.protoc -I./api --proto_path=api --python_out=. --pyi_out=. --grpc_python_out=. ./api/gen/hello.proto
+
+  docker-client:
+    deps:
+      - protoc
+    cmds:
+      - docker build -f Dockerfile.client -t pyclient:latest .
+
+  docker-server:
+    deps:
+      - protoc
+    cmds:
+      - docker build -f Dockerfile.server -t pyserver:latest .
+
+  docker:
+    deps:
+      - docker-client
+      - docker-server
+
+  compose-up:
+    deps:
+      - docker
+    cmds:
+      - docker compose up
+
+  compose-down:
+    cmds:
+      - docker compose down
+
+  local-test:
+    deps:
+      - compose-up
+    cmds:
+      - sleep 10 && docker compose down
