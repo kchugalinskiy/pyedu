@@ -5,10 +5,12 @@ from typing import ClassVar as _ClassVar, Optional as _Optional
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class GoodbyeReply(_message.Message):
-    __slots__ = ["message"]
+    __slots__ = ["hello_count", "message"]
+    HELLO_COUNT_FIELD_NUMBER: _ClassVar[int]
     MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    hello_count: int
     message: str
-    def __init__(self, message: _Optional[str] = ...) -> None: ...
+    def __init__(self, message: _Optional[str] = ..., hello_count: _Optional[int] = ...) -> None: ...
 
 class GoodbyeRequest(_message.Message):
     __slots__ = ["name"]

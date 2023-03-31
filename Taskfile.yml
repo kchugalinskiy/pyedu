@@ -17,10 +17,15 @@ tasks:
     cmds:
       - docker build -f Dockerfile.server -t pyserver:latest .
 
+  docker-migrate:
+    cmds:
+      - docker build -f Dockerfile.migrate -t pymigrate:latest .
+
   docker:
     deps:
       - docker-client
       - docker-server
+      - docker-migrate
 
   compose-up:
     deps:
@@ -37,3 +42,21 @@ tasks:
       - compose-up
     cmds:
       - sleep 10 && docker compose down
+
+  local-test-client:
+    deps:
+      - docker-client
+    cmds:
+      - docker run --network helloworld_default -e GRPC_HOST=server -e GRPC_PORT=8080 -it pyclient:latest
+
+  local-test-migrate-up:
+    deps:
+      - docker-migrate
+    cmds:
+      - docker run --network helloworld_default -e POSTGRES_HOST=postgres -e POSTGRES_PORT=5432 -e POSTGRES_USER=user -e POSTGRES_PASSWORD=password123123123 -e POSTGRES_DB=students -it pymigrate:latest up
+
+  local-test-migrate-down:
+    deps:
+      - docker-migrate
+    cmds:
+      - docker run --network helloworld_default -e POSTGRES_HOST=postgres -e POSTGRES_PORT=5432 -e POSTGRES_USER=user -e POSTGRES_PASSWORD=password123123123 -e POSTGRES_DB=students -it pymigrate:latest down

@@ -21,4 +21,5 @@ message GoodbyeRequest {
 
 message GoodbyeReply {
   string message = 1;
+  int32 hello_count = 2;
 }

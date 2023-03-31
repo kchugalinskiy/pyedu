@@ -13,7 +13,13 @@ class Greeter(hello_pb2_grpc.GreeterServicer):
 
     def SayHello(self, request, context):
         print("received request from: " + request.name)
-        return hello_pb2.HelloReply(message='Hello ' + request.name + ' tables cnt ' + self.repo.get_number_of_tables())
+        self.repo.insert_hello(request.name)
+        return hello_pb2.HelloReply(message='Hello ' + request.name)
+
+    def SayGoodbye(self, request, context):
+        print("received goodbye from: " + request.name)
+        cnt = self.repo.count_hello(request.name)
+        return hello_pb2.GoodbyeReply(message='Goodbye ' + request.name, hello_count=cnt)
 
     def serve(self):
         port = self.port
