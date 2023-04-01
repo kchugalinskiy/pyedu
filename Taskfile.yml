@@ -3,7 +3,7 @@ version: '3'
 tasks:
   protoc:
     cmds:
-      - python -m grpc_tools.protoc -I./api --proto_path=api --python_out=. --pyi_out=. --grpc_python_out=. ./api/gen/hello.proto
+      - python3 -m grpc_tools.protoc -I./api --proto_path=api --python_out=. --pyi_out=. --grpc_python_out=. ./api/gen/hello.proto
 
   docker-client:
     deps:
