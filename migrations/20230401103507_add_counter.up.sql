@@ -1,0 +1,1 @@
+ALTER TABLE greetings ADD COLUMN counter int;
