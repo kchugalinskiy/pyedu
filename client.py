@@ -16,15 +16,17 @@ def run():
     port = os.environ.get('GRPC_PORT')
     with grpc.insecure_channel(host + ':' + port) as channel:
         stub = hello_pb2_grpc.GreeterStub(channel)
-        stub.SayHello(hello_pb2.HelloRequest(name='Вася'))
-        response = stub.SayGoodbye(hello_pb2.GoodbyeRequest(name='Вася'))
+        vasya = 'Вася'
+        petya = 'Петя'
+        stub.SayHello(hello_pb2.HelloRequest(name=vasya))
+        response = stub.SayGoodbye(hello_pb2.GoodbyeRequest(name=vasya))
         print("Greeter client received: " + response.message)
         if response.hello_count == 0:
-            print("User is impolite!")
-        response = stub.SayGoodbye(hello_pb2.GoodbyeRequest(name='Петя'))
+            print(vasya + " is impolite!")
+        response = stub.SayGoodbye(hello_pb2.GoodbyeRequest(name=petya))
         print("Greeter client received: " + response.message)
         if response.hello_count == 0:
-            print("User is impolite!")
+            print(petya + " is impolite!")
 
 
 if __name__ == '__main__':

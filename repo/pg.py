@@ -8,7 +8,8 @@ class Repository(object):
         self.conn = psycopg2.connect(dbname=dbname, user=username,
                                      password=password, host=host, port=port)
         print("pg connection at " + host + ':' + port)
-        self.insert_query = sql.SQL("insert into {} values (%s)").format(sql.Identifier('greetings'))
+        self.insert_query = sql.SQL("insert into {table}({username}) values (%s)").format(
+            table=sql.Identifier('greetings'), username=sql.Identifier('username'))
         self.count_hello_query = sql.SQL('SELECT count(*) FROM {table} WHERE {username}=%s').format(
             username=sql.Identifier('username'), table=sql.Identifier('greetings'))
 
