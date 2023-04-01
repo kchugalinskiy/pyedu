@@ -22,6 +22,7 @@ class Repository(object):
     def insert_hello(self, username: str):
         with self.conn.cursor() as cursor:
             cursor.execute(self.insert_query, [username])
+            self.conn.commit()
 
     def count_hello(self, username: str):
         with self.conn.cursor(cursor_factory=DictCursor) as cursor:
