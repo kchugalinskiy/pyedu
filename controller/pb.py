@@ -3,10 +3,11 @@ from concurrent import futures
 import grpc
 
 from gen import *
+from repo.pg import Repository
 
 
 class Greeter(hello_pb2_grpc.GreeterServicer):
-    def __init__(self, host: str, port: str, repo):
+    def __init__(self, host: str, port: str, repo: Repository):
         self.host = host
         self.port = port
         self.repo = repo
@@ -21,7 +22,7 @@ class Greeter(hello_pb2_grpc.GreeterServicer):
         cnt = self.repo.count_hello(request.name)
         return hello_pb2.GoodbyeReply(message='Goodbye ' + request.name, hello_count=cnt)
 
-    def serve(self):
+    async def serve(self):
         port = self.port
         server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
         hello_pb2_grpc.add_GreeterServicer_to_server(self, server)
