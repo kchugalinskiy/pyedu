@@ -24,11 +24,12 @@ services:
     depends_on:
       postgres:
         condition: service_started
-  server:
+  gserver:
     image: pyserver:latest
     environment:
       - GRPC_PORT=8080
       - HTTP_PORT=8081
+      - ENABLE_GRPC=1
       - POSTGRES_HOST=postgres
       - POSTGRES_PORT=5432
       - POSTGRES_USER=user
@@ -41,15 +42,34 @@ services:
         condition: service_started
     ports:
       - "8080:8080"
+      - "8081"
+  hserver:
+    image: pyserver:latest
+    environment:
+      - GRPC_PORT=8080
+      - HTTP_PORT=8081
+      - ENABLE_HTTP=1
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password123123123
+      - POSTGRES_DB=students
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_started
+    ports:
+      - "8080"
       - "8081:8081"
 
   client:
     environment:
-      GRPC_HOST: server
+      GRPC_HOST: gserver
       GRPC_PORT: 8080
     image: pyclient:latest
     depends_on:
-      server:
+      gserver:
         condition: service_started
 
 volumes:

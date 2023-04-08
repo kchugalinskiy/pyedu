@@ -1,3 +1,4 @@
+from typing import Annotated
 from fastapi import Depends, FastAPI
 from repo.pg import Repository
 from pydantic import BaseModel
@@ -11,22 +12,21 @@ def get_db():
     return g_repo
 
 
-class Rest:
-    def __init__(self, port: int, repo):
-        self.port = port
-        global g_repo
-        g_repo = repo
+async def serve(port: int, repo):
+    global g_repo
+    g_repo = repo
+    config = uvicorn.Config("controller.rest:app", host="0.0.0.0", port=port, log_level="info")
+    server = uvicorn.Server(config)
+    config.setup_event_loop()
+    await server.serve()
 
-    async def serve(self):
-        config = uvicorn.Config("controller.rest:app", port=self.port, log_level="info")
-        server = uvicorn.Server(config)
-        config.setup_event_loop()
-        await server.serve()
 
-    def run(self):
-        config = uvicorn.Config("controller.rest:app", port=self.port, log_level="info")
-        server = uvicorn.Server(config)
-        server.run()
+def run(port: int, repo):
+    global g_repo
+    g_repo = repo
+    config = uvicorn.Config("controller.rest:app", host="0.0.0.0", port=port, log_level="info")
+    server = uvicorn.Server(config)
+    server.run()
 
 
 class HelloRequest(BaseModel):
@@ -64,6 +64,11 @@ class Item(BaseModel):
     name: str
 
 
+async def common_parameters(q: str | None = None, skip: int = 0, limit: int = 100, name: str = ""):
+    return {"q": q, "skip": skip, "limit": limit, "name": name}
+
+
 @app.post("/items/")
-async def create_item(item: Item):
+async def create_item(item: Item, commons: Annotated[dict, Depends(common_parameters)]):
+    print(commons)
     return item
