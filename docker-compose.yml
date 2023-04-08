@@ -46,6 +46,8 @@ services:
   hserver:
     image: pyserver:latest
     environment:
+      - CLIENT_GRPC_HOST=gserver
+      - CLIENT_GRPC_PORT=8080
       - GRPC_PORT=8080
       - HTTP_PORT=8081
       - ENABLE_HTTP=1
