@@ -1,6 +1,50 @@
 version: "3"
-
 services:
+
+  http_server:
+    image: http_server
+    ports:
+      - "8081:8081"
+    volumes:
+      - .:/opt/app
+    command: python start_happ.py
+    env_file:
+      - .env
+    build: .
+    depends_on:
+      postgres:
+        condition: service_started
+      migrate:
+        condition: service_completed_successfully
+
+  grpc_server:
+    image: grpc_server
+    env_file:
+      - .env
+    volumes:
+      - .:/opt/app
+    depends_on:
+      postgres:
+        condition: service_started
+      migrate:
+        condition: service_completed_successfully
+    ports:
+      - "8082:8082"
+    command: python start_gapp.py
+    build: .
+
+    
+  grpc_client:
+    image: grpc_client
+    environment:
+      GRPC_HOST: grpc_server
+      GRPC_PORT: 8082
+    command: python grpc_client.py
+    build: .
+    depends_on:
+      grpc_server:
+        condition: service_started
+
   postgres:
     image: postgres:latest
     container_name: postgres
@@ -11,68 +55,18 @@ services:
     ports:
       - "5432:5432"
     restart: always
-    volumes:
-      - edu-pg-data:/var/lib/postgresql/data
+
   migrate:
-    image: pymigrate:latest
+    image: pymigrate
     environment:
       - POSTGRES_HOST=postgres
       - POSTGRES_PORT=5432
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=password123123123
       - POSTGRES_DB=students
+    build: 
+      context: .
+      dockerfile: Dockerfile.migrate
     depends_on:
       postgres:
         condition: service_started
-  gserver:
-    image: pyserver:latest
-    environment:
-      - GRPC_PORT=8080
-      - HTTP_PORT=8081
-      - ENABLE_GRPC=1
-      - POSTGRES_HOST=postgres
-      - POSTGRES_PORT=5432
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password123123123
-      - POSTGRES_DB=students
-    depends_on:
-      migrate:
-        condition: service_completed_successfully
-      postgres:
-        condition: service_started
-    ports:
-      - "8080:8080"
-      - "8081"
-  hserver:
-    image: pyserver:latest
-    environment:
-      - CLIENT_GRPC_HOST=gserver
-      - CLIENT_GRPC_PORT=8080
-      - GRPC_PORT=8080
-      - HTTP_PORT=8081
-      - ENABLE_HTTP=1
-      - POSTGRES_HOST=postgres
-      - POSTGRES_PORT=5432
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password123123123
-      - POSTGRES_DB=students
-    depends_on:
-      migrate:
-        condition: service_completed_successfully
-      postgres:
-        condition: service_started
-    ports:
-      - "8080"
-      - "8081:8081"
-
-  client:
-    environment:
-      GRPC_HOST: gserver
-      GRPC_PORT: 8080
-    image: pyclient:latest
-    depends_on:
-      gserver:
-        condition: service_started
-
-volumes:
-  edu-pg-data: {}

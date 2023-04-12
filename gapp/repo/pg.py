@@ -1,13 +1,17 @@
 import psycopg2
 from psycopg2 import sql
 from psycopg2.extras import DictCursor
+from gapp.core.config import settings
 
 
 class Repository(object):
-    def __init__(self, host: str, port: str, dbname: str, username: str, password: str):
-        self.conn = psycopg2.connect(dbname=dbname, user=username,
-                                     password=password, host=host, port=port)
-        print("pg connection at " + host + ':' + port)
+    def __init__(self):
+        self.conn = psycopg2.connect(dbname=settings.POSTGRES_DB,
+                                     user=settings.POSTGRES_USER,
+                                     password=settings.POSTGRES_PASSWORD,
+                                     host=settings.POSTGRES_SERVER,
+                                     port=settings.POSTGRES_PORT)
+        print(f"pg connection at {settings.POSTGRES_SERVER}:{settings.POSTGRES_PORT}")
         self.insert_query = sql.SQL("insert into {table}({username}) values (%s)").format(
             table=sql.Identifier('greetings'), username=sql.Identifier('username'))
         self.count_hello_query = sql.SQL('SELECT count(*) FROM {table} WHERE {username}=%s').format(

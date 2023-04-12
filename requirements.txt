@@ -1,6 +1,10 @@
-grpcio-tools
-grpcio
-psycopg2-binary
+grpcio-tools==1.53.0
+grpcio==1.53.0
+psycopg2-binary==2.9.6
 fastapi~=0.95.0
 uvicorn~=0.21.1
-pydantic~=1.10.7
+pydantic[dotenv]
+sqlalchemy==2.0.9
+asyncpg==0.27.0
+pymigrate==0.1
+alembic
