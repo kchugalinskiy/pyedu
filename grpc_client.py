@@ -4,7 +4,8 @@ import logging
 import os
 
 import grpc
-from gen import *
+from gapp.gen import hello_pb2_grpc
+from happ.services.grpc import hello_pb2
 
 
 def run():
